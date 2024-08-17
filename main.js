@@ -1,22 +1,3 @@
-const dialog = document.querySelector("dialog");
-
-document.querySelector(".new-book").addEventListener("click", () => {
-  dialog.showModal();
-});
-
-document.querySelector(".cancel").addEventListener("click", () => {
-  dialog.close();
-});
-
-const form = document.querySelector("form");
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
-  addBookToLibrary();
-  renderBooks();
-  dialog.close();
-  form.reset();
-});
-
 const myLibrary = [];
 
 function Book(title, author, pages, read) {
@@ -25,6 +6,10 @@ function Book(title, author, pages, read) {
   this.pages = pages;
   this.read = read;
 }
+
+Book.prototype.toggleReadStatus = function () {
+  this.read = !this.read;
+};
 
 function addBookToLibrary() {
   const title = document.querySelector("#title").value;
@@ -51,6 +36,7 @@ function renderBooks() {
     </div>`;
   });
   document.querySelector(".result").innerHTML = html;
+
   document.querySelectorAll(".delete").forEach((deleteBtn) => {
     deleteBtn.addEventListener("click", () => {
       const { index } = deleteBtn.dataset;
@@ -61,8 +47,25 @@ function renderBooks() {
   document.querySelectorAll(".read").forEach((readBtn) => {
     readBtn.addEventListener("click", () => {
       const { index } = readBtn.dataset;
-      myLibrary[index].read = !myLibrary[index].read;
+      myLibrary[index].toggleReadStatus();
       renderBooks();
     });
   });
 }
+
+const dialog = document.querySelector("dialog");
+document.querySelector(".new-book").addEventListener("click", () => {
+  dialog.showModal();
+});
+document.querySelector(".cancel").addEventListener("click", () => {
+  dialog.close();
+});
+
+const form = document.querySelector("form");
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  addBookToLibrary();
+  renderBooks();
+  dialog.close();
+  form.reset();
+});
