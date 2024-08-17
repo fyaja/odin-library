@@ -8,11 +8,13 @@ document.querySelector(".cancel").addEventListener("click", () => {
   dialog.close();
 });
 
-document.querySelector("form").addEventListener("submit", (e) => {
+const form = document.querySelector("form");
+form.addEventListener("submit", (e) => {
   e.preventDefault();
   addBookToLibrary();
   renderBooks();
   dialog.close();
+  form.reset();
 });
 
 const myLibrary = [];
@@ -28,7 +30,7 @@ function addBookToLibrary() {
   const title = document.querySelector("#title").value;
   const author = document.querySelector("#author").value;
   const page = document.querySelector("#page").value;
-  const read = document.querySelector("#read").value;
+  const read = document.querySelector("#read").checked;
 
   const book = new Book(title, author, page, read);
   myLibrary.push(book);
@@ -36,13 +38,14 @@ function addBookToLibrary() {
 
 function renderBooks() {
   let html = "";
-  myLibrary.forEach((book) => {
+  myLibrary.forEach((book, index) => {
     html += `
-    <div class="card">
+    <div class="card" data-index="${index}">
       <p>${book.title} by ${book.author}</p>
-      <p>${book.page} pages</p>
+      <p>${book.pages} pages</p>
       <p>${book.read ? "read" : "not read"}</p>
-      <button>Unread</button>
+      <button class="read">Unread</button>
+      <button class="delete">Delete</button>
     </div>`;
   });
   document.querySelector(".result").innerHTML = html;
