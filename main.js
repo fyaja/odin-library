@@ -40,13 +40,29 @@ function renderBooks() {
   let html = "";
   myLibrary.forEach((book, index) => {
     html += `
-    <div class="card" data-index="${index}">
+    <div class="card">
       <p>${book.title} by ${book.author}</p>
       <p>${book.pages} pages</p>
       <p>${book.read ? "read" : "not read"}</p>
-      <button class="read">Unread</button>
-      <button class="delete">Delete</button>
+      <button class="read" data-index="${index}">${
+      book.read ? "Mark as Unread" : "Mark as Read"
+    }</button>
+      <button class="delete" data-index="${index}">Delete</button>
     </div>`;
   });
   document.querySelector(".result").innerHTML = html;
+  document.querySelectorAll(".delete").forEach((deleteBtn) => {
+    deleteBtn.addEventListener("click", () => {
+      const { index } = deleteBtn.dataset;
+      myLibrary.splice(index, 1);
+      renderBooks();
+    });
+  });
+  document.querySelectorAll(".read").forEach((readBtn) => {
+    readBtn.addEventListener("click", () => {
+      const { index } = readBtn.dataset;
+      myLibrary[index].read = !myLibrary[index].read;
+      renderBooks();
+    });
+  });
 }
